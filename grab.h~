@@ -1,0 +1,8 @@
+#ifndef GRAB_H
+#define GRAB_H
+struct streamprop {
+  unsigned int buffer_length;
+  unsigned int sample_rate;
+};
+
+#endif

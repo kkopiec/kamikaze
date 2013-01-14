@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <jack/jack.h>
+
+jack_port_t *input_port;
+float *adata;
+int 
+process (jack_nframes_t nframes, void *arg){
+  jack_default_audio_sample_t *in = (jack_default_audio_sample_t *) jack_port_get_buffer (input_port, nframes);
+
+  adata = malloc(sizeof(jack_default_audio_sample_t) * nframes);
+  memcpy (adata, in, sizeof(jack_default_audio_sample_t) * nframes);
+  printf("Data: %f\n", adata[0]);
+  free(adata);
+  return 0;
+}
