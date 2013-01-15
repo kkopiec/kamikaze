@@ -58,19 +58,22 @@ mic_setup( void (*dpf)(struct audio_stream*) )
   /***********************
    * create jack client for the server
    ***********************/
-  if ((client = jack_client_open("mic_in", JackNullOption,NULL)) == NULL){
+  if ((client = jack_client_open("kamikaze", JackNullOption,NULL)) == NULL){
     fprintf(stderr, "jack server not running?/nOr maybe should try this as root?/n");
     return 1;
   }
 
   jack_set_process_callback(client, process, 0);
   jack_on_shutdown(client, jack_shutdown,0);
-  input_port = jack_port_register(client, "mic_plug_in", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput,0);
+  input_port = jack_port_register(client, "mic", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput,0);
 
   if (jack_activate(client)){
     fprintf(stderr, "cannot activate client!\n");
+
     exit(1);
   }
+  mic_grab();
+
 }
 
 /***********************

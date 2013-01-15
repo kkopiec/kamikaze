@@ -1,5 +1,5 @@
 $CC= gcc
-$JACKFLAGS= `pkg-config --cflags --libs jack`
+$JACKFLAGS= -ljack -lfttw3 -lm
 
 grabber: main.c grab.o
 	$(CC) -o grabber $(JACKFLAGS) main.c grab.c

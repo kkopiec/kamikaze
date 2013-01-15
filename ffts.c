@@ -1,12 +1,19 @@
 #include<math.h>
+#include<stdlib.h>
 #include<fftw3.h>
+#include<string.h>
+#include"ffts.h"
 #include"grab.h"
 fftw_plan plan;
-static float
-calc_magnitude (const float * freq, int freqlen, float * magnitude)
+//fftw_complex *out;
+double *in, *out;
+int fft_set = 0;
+
+static double
+calc_magnitude (const double * freq, int freqlen, double * magnitude)
 {
 	int k ;
-	float max = 0.0 ;
+	double max = 0.0 ;
 
 	for (k = 1 ; k < freqlen / 2 ; k++)
 	{	magnitude [k] = sqrt (freq [k] * freq [k] + freq [freqlen - k - 1] * freq [freqlen - k - 1]) ;
@@ -16,11 +23,32 @@ calc_magnitude (const float * freq, int freqlen, float * magnitude)
 
 	return max ;
 }
-void fftw_setup()
+
+void 
+fftw_setup(int length)
 {
-  plan = fftw_plan_r2r_1d (2 * speclen, time_domain, freq_domain, FFTW_R2HC, FFTW_MEASURE | FFTW_PRESERVE_INPUT) ;
+  int N = length;
+  in = malloc(sizeof(double) * N);
+  out = malloc(sizeof(double) * N * 2);
+  plan = fftw_plan_r2r_1d (N , in, out, FFTW_R2HC, FFTW_MEASURE | FFTW_PRESERVE_INPUT) ;
+  fft_set = 1;
 }
 
-int getfreq(float* sin, float* sout, int size)
+int
+getfreq(double *sin, double* sout, int length)
 {
-  
+  if (!fft_set)
+    fftw_setup(length);
+  memcpy(in, sin, length);
+  fftw_execute(plan);
+  memcpy(out, sout, length *2);
+  return length * 2;
+}
+
+void
+fft_clean()
+{
+  if (fft_set)
+    fftw_destroy_plan (plan);
+}
+ 
