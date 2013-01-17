@@ -1,6 +1,6 @@
 CC= gcc
 JACKFLAGS= -ljack -lfftw3 -lm
-
+all: grabber IPC
 grabber: main.c grab.o ffts.o windows.o image.o animation.o commands.o global.h 
 	$(CC) -o grabber main.c grab.o ffts.o windows.o image.o animation.o commands.o $(JACKFLAGS)
 
@@ -21,3 +21,6 @@ animation.o: animation.c animation.h
 
 commands.o: commands.c commands.h
 	$(CC) -c commands.c $(JACKFLAGS)
+
+IPC: IPC.c
+	$(CC) -o IPC IPC.c

@@ -86,7 +86,7 @@ main (int argc, char *argv[])
   //calculate_fbs(48000, 1024);
   while (1){
     sleep (1);
-    //readCommand("Kamikaze_Server", "Kamikaze_Client");
+    readCommand("Kamikaze_Server", "Kamikaze_Client");
   }
   free(img);
   return 0;
