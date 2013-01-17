@@ -7,6 +7,7 @@
 #include "global.h"
 #include "image.h"
 #include "animation.h"
+#include "commands.h"
 struct image *img;
 
 void 
@@ -39,11 +40,23 @@ void cb_mic(struct audio_stream *as)
   //  printf("--------------------------------------------------------------\n\n");
 
   // make animation here
+  switch(cmdnr){
+  case 0: //do not display
+    
+    break;
+  case 1: //anim1 + display
+    fallingEdge(img, mag, 8);
+    testimgdisplay(img); //<- or send to arduino (by kev)
+    break;
+  case 2: //anim2 + display
+    plainDb(img, mag, 8);
+    testimgdisplay(img); //<- or send to arduino (by kev)
+    break;
+  }
   
-  fallingEdge(img, mag, 8);
 
   // send img somewhere here
-  testimgdisplay(img);
+
   printf("\n");
  /*
   int j = sizeof(double) * as->buffer_length ;
@@ -59,6 +72,7 @@ void cb_mic(struct audio_stream *as)
 int
 main (int argc, char *argv[])
 {
+  cmdnr = 1;
   img = malloc( sizeof(struct image));
   img->width = 8;
   img->height = 8;
@@ -70,8 +84,10 @@ main (int argc, char *argv[])
   mic_setup (&cb_mic);
   //mic_grab;
   //calculate_fbs(48000, 1024);
-  while (1)
+  while (1){
     sleep (1);
+    //readCommand("Kamikaze_Server", "Kamikaze_Client");
+  }
   free(img);
   return 0;
 }

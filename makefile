@@ -1,8 +1,8 @@
 CC= gcc
 JACKFLAGS= -ljack -lfftw3 -lm
 
-grabber: main.c grab.o ffts.o windows.o image.o animation.o global.h 
-	$(CC) -o grabber main.c grab.o ffts.o windows.o image.o animation.o $(JACKFLAGS)
+grabber: main.c grab.o ffts.o windows.o image.o animation.o commands.o global.h 
+	$(CC) -o grabber main.c grab.o ffts.o windows.o image.o animation.o commands.o $(JACKFLAGS)
 
 grab.o:	grab.h grab.c global.h
 	$(CC) -c grab.c  $(JACKFLAGS)
@@ -18,3 +18,6 @@ image.o: image.h image.c
 
 animation.o: animation.c animation.h
 	$(CC) -c animation.c $(JACKFLAGS)	
+
+commands.o: commands.c commands.h
+	$(CC) -c commands.c $(JACKFLAGS)
