@@ -5,10 +5,12 @@
 #include <string.h>
 #include <jack/jack.h>
 #include "grab.h"
+#define jack_default_audio_sample_t double
 jack_client_t *client;
 jack_port_t *input_port;
 float *adata;
 void (*dataproc)(struct audio_stream*);
+ 
 /***********************
  * callback function from jack audio server on data retrieval
  ***********************/
@@ -17,11 +19,19 @@ process (jack_nframes_t nframes, void *arg)
 {
   jack_default_audio_sample_t *in = (jack_default_audio_sample_t *) jack_port_get_buffer (input_port, nframes);
   struct audio_stream *adata = malloc(sizeof(struct audio_stream));
-  adata->audio_data = malloc(sizeof(jack_default_audio_sample_t) * nframes);
+  adata->audio_data = malloc(sizeof(double) * nframes);
 /*  adata = malloc(sizeof(jack_default_audio_sample_t) * nframes);*/
   adata->buffer_length = nframes;
   adata->sample_rate = jack_get_sample_rate(client);
-  memcpy (adata->audio_data, in, sizeof(jack_default_audio_sample_t) * nframes);
+
+  //memcpy (adata->audio_data, in, sizeof(jack_default_audio_sample_t) * nframes);
+  
+  int i;
+  for ( i = 0 ; i < nframes ; i++){
+    adata->audio_data[i] = (double) in[i];
+  }
+  
+  //printf("%.32f \n", (float) in[0]);
   /*********************** TODO ***********************
    * here we've got data from the mic (adata) of the length nframes
    * good to send back (maybe callback ??)

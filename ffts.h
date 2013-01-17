@@ -4,7 +4,7 @@
 #define MAX(x,y)		((x) > (y) ? (x) : (y))
 #define MIN(x,y)		((x) < (y) ? (x) : (y))
 
-static double 
+double 
 calc_magnitude (const double * freq, int freqlen, double * magnitude);
 
 void 
@@ -16,4 +16,6 @@ getfreq(double *sin, double* sout, int length);
 void
 fft_clean();
 
+void
+apply_window (double * data, int datalen);
 #endif
