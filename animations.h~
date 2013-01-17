@@ -1,0 +1,10 @@
+#ifndef ANIMATIONS_H
+#define ANIMATIONS_H
+
+void
+fallingEdge(struct image *img);
+
+void
+plainDb(struct image *img);
+
+#endif

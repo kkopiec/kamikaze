@@ -1,0 +1,4 @@
+#ifndef FFTS_H
+#define FFTS_H
+
+static double calc_magnitude (const double * freq, int freqlen, double * magnitude);
