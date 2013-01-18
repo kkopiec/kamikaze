@@ -9,41 +9,51 @@
 #include <sys/ioctl.h>
 #include <getopt.h>
 #include "image.h"
-struct image *img;
 
+int fds;
 
 int serialport_init(const char* serialport, int baud);
-int serialport_write(int fd, struct image *str);
+int serialport_write(int fd, unsigned char* buf);
 
-
-
-
-
-int cucumber(struct image *nimg)
+int initiateSerialLine()
 {
-	int fd = 0;
-   	char serialport[256];
-	int baudrate = B115200;  
-	char buf[20], dat[20], use[1];
-	int rc,n;
+  fds = 0;
+  char serialport[256];
+  int baudrate = B115200;  
+
 		
-	fd = serialport_init("/dev/ttyprintk", baudrate);
-				if(fd==-1) return -1;
-	usleep(3000 * 1000 );
-	
-	//Code for reading in values to be sent to arduino.
-	
-	rc = serialport_write(fd, nimg);
-	
-	if(rc==-1) return -1;
+  fds = serialport_init("/dev/ttyACM0", baudrate);
+  if(fds==-1) return -1;
+  return 0;
 }
 
-int serialport_write(int fd, struct image *str)
+int closeSerialLine()
 {
-    //int len = strlen(str);	
-    int n = write(fd, str, 8);
+  close(fds);
+  return 0;
+}
+
+
+
+int sendToArduino(unsigned char* buffer)
+{
 	
-    if( n!=8 ) 		
+	//	usleep(3000 * 1000 );
+	
+	//Code for reading in values to be sent to arduino.
+  int rc;	
+  rc = serialport_write(fds, buffer);
+  
+  if(rc==-1) return -1;
+  return 0;
+}
+
+int serialport_write(int fd, unsigned char* buf)
+{
+    int len = strlen(buf);	
+    int n = write(fd, buf, len);
+	
+    if( n!=len ) 		
         return -1;	
     return n;
 }

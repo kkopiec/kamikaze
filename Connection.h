@@ -1,7 +1,10 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
-int 
-cucumber(struct image *nimg);
+int sendToArduino(unsigned char* buffer);
+
+int initiateSerialLine();
+
+int closeSerialLine();
 
 #endif

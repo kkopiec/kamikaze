@@ -1,6 +1,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<math.h>
+
 #include "grab.h"
 #include "ffts.h"
 #include "windows.h"
@@ -8,11 +9,9 @@
 #include "image.h"
 #include "animation.h"
 #include "commands.h"
-<<<<<<< HEAD
 #include "compressor.h"
-=======
 #include "Connection.h"
->>>>>>> 4d0f1169d05f40cc9528c37fc3a6b4b76a6f9678
+
 struct image *img;
 
 void 
@@ -45,19 +44,25 @@ void cb_mic(struct audio_stream *as)
   //  printf("--------------------------------------------------------------\n\n");
 
   // make animation here
+  unsigned char* idata;
   switch(cmdnr){
   case 0: //do not display
     
     break;
   case 1: //anim1 + display
     fallingEdge(img, mag, 8);
-    testimgdisplay(img); //<- or send to arduino (by kev)
-    cucumber(img);	
+    //    testimgdisplay(img); //<- or send to arduino (by kev)
+    idata = compressData(img);
+    sendToArduino(idata);
+    free(idata);
     break;
   case 2: //anim2 + display
     plainDb(img, mag, 8);
-    testimgdisplay(img); //<- or send to arduino (by kev)
-    cucumber(img);
+    idata = compressData(img);
+    sendToArduino(idata);
+    free(idata);
+    //    testimgdisplay(img); //<- or send to arduino (by kev)
+
     break;
   }
   
@@ -86,7 +91,7 @@ main (int argc, char *argv[])
   img->frames = 8;
   int datasize = img->width * img->height * img->frames;
   img->imgdata = calloc(datasize, sizeof(char));
-
+  initiateSerialLine();
   fftw_setup(1024);
   mic_setup (&cb_mic);
   //mic_grab;
@@ -95,6 +100,7 @@ main (int argc, char *argv[])
     sleep (1);
     readCommand("Kamikaze_Server", "Kamikaze_Client");
   }
+  closeSerialLine();
   free(img);
   return 0;
 }

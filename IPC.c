@@ -9,7 +9,7 @@ main(int argc, char **argv)
 {
   printf("executing");
  int i = 0;
- int pv = (int)argv[0]; // paramater passed from php / cgi script (debating this still)
+ int pv = atoi(argv[0]); // paramater passed from php / cgi script (debating this still)
  int file_server, file_client;
 
 
