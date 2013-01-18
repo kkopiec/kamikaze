@@ -8,7 +8,11 @@
 #include "image.h"
 #include "animation.h"
 #include "commands.h"
+<<<<<<< HEAD
 #include "compressor.h"
+=======
+#include "Connection.h"
+>>>>>>> 4d0f1169d05f40cc9528c37fc3a6b4b76a6f9678
 struct image *img;
 
 void 
@@ -48,10 +52,12 @@ void cb_mic(struct audio_stream *as)
   case 1: //anim1 + display
     fallingEdge(img, mag, 8);
     testimgdisplay(img); //<- or send to arduino (by kev)
+    cucumber(img);	
     break;
   case 2: //anim2 + display
     plainDb(img, mag, 8);
     testimgdisplay(img); //<- or send to arduino (by kev)
+    cucumber(img);
     break;
   }
   
