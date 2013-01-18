@@ -1,3 +1,7 @@
+/**
+ *I read client
+ *I write server 
+ */
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -5,11 +9,15 @@
 #include <unistd.h>
 #define SLEEPTIME 10
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   printf("executing");
  int i = 0;
+<<<<<<< HEAD
+ int pv = atoi(argv[1]); // paramater passed from php / cgi script (debating this still)
+=======
  int pv = atoi(argv[0]); // paramater passed from php / cgi script (debating this still)
+>>>>>>> 42ab8b488acce616fc7c6cafd88bcf6805227e6d
  int file_server, file_client;
 
 
@@ -18,7 +26,12 @@ main(int argc, char **argv)
 
  file_client = open("Kamikaze_Client",O_RDWR );
  file_server = open("Kamikaze_Server",O_RDWR);
-
+ 
+ if((file_client <0)&&(file_server<0))
+   {
+     perror("aider of pipes open\n");
+     exit(1);
+}
  /*if(file_client < 0 ){
    printf("Error Kamikaze_Server Pipe not created\n please run the server");
 
@@ -29,23 +42,17 @@ main(int argc, char **argv)
    }
  }else{
 */
-   printf("working");
-   write(file_client, &pv, 1);
-   close(file_client);
-// } 
- /*if(file_server < 0){
 
- while(file_server < 0)
-   {
-     file_server = open("Kamikaze_Server",O_RDWR);
-    
-     sleep(SLEEPTIME);
-   }
- }*/
- buf = malloc(10*sizeof(char));
- read(file_server,buf,10*sizeof(char));
- char blank = ' ';
+ /**
+  *Read from the client.
+  *
+  */
  
+ buf = malloc(10*sizeof(char));
+
+    read(file_client,buf,10*sizeof(char));
+ char blank = ' ';
+ close(file_client);
  write(file_server,&blank, 1);
  //FILE *file;
  // file = fopen("ran.txt","a+");
@@ -53,5 +60,6 @@ main(int argc, char **argv)
  //fprintf(file, "<p> %s</p>",buf);
  //fclose(file);
  close(file_server);
+ return 1;
  }
 
