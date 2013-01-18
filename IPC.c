@@ -5,10 +5,11 @@
 #include <unistd.h>
 #define SLEEPTIME 10
 
-main(int argc)
+main(int argc, char **argv)
 {
-  
- int pv = argc; // paramater passed from php / cgi script (debating this still)
+  printf("executing");
+ int i = 0;
+ int pv = (int)argv[0]; // paramater passed from php / cgi script (debating this still)
  int file_server, file_client;
 
 
@@ -18,7 +19,7 @@ main(int argc)
  file_client = open("Kamikaze_Client",O_RDWR );
  file_server = open("Kamikaze_Server",O_RDWR);
 
- if(file_client < 0 ){
+ /*if(file_client < 0 ){
    printf("Error Kamikaze_Server Pipe not created\n please run the server");
 
    while(file_client<0){
@@ -27,10 +28,12 @@ main(int argc)
     //printf("Testing the server problem error");
    }
  }else{
+*/
+   printf("working");
    write(file_client, &pv, 1);
    close(file_client);
- } 
- if(file_server < 0){
+// } 
+ /*if(file_server < 0){
 
  while(file_server < 0)
    {
@@ -38,16 +41,17 @@ main(int argc)
     
      sleep(SLEEPTIME);
    }
- }
+ }*/
  buf = malloc(10*sizeof(char));
  read(file_server,buf,10*sizeof(char));
  char blank = ' ';
+ 
  write(file_server,&blank, 1);
- FILE *file;
- file = fopen("ran.txt","a+");
- fprintf(file,"Content-Type: text/plain; charset=us-ascii\n\n");
- fprintf(file, "<p> %s</p>",buf);
- fclose(file);
+ //FILE *file;
+ // file = fopen("ran.txt","a+");
+ //fprintf(file,"Content-Type: text/plain; charset=us-ascii\n\n");
+ //fprintf(file, "<p> %s</p>",buf);
+ //fclose(file);
  close(file_server);
  }
 
