@@ -8,6 +8,7 @@
 #include "image.h"
 #include "animation.h"
 #include "commands.h"
+#include "compressor.h"
 struct image *img;
 
 void 
