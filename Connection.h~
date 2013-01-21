@@ -1,2 +1,0 @@
-
-int cucumber(struct image *nimg);

@@ -1,0 +1,5 @@
+*.o
+*.~
+grabber
+imgtst
+simple
