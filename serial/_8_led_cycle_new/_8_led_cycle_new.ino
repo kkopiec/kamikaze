@@ -5,8 +5,10 @@ long c = 0 ;
 long g = 0;;
 int layers[] = {30,31,32,33,34,35,36,37};
 int numLayers = 8;
-unsigned char buffer[] = {0,0,0,0,
-                 0,0,0,0};
+
+unsigned char frame [8*8] ={0};
+
+unsigned char buffer[] = {0,0,0,0,0,0,0,0};
 long prev_milis = 0;
 long interval = 100;
 void setup(){
@@ -48,15 +50,29 @@ if(Serial.available()){
       }
 }
 
-void TlcDisplay(unsigned short in)
-{ Tlc.clear();
-  for(int i = 0; i<=15;i++)
-  {
+void TlcDisplay()
+{ 
+  
+  
+    for( int j =0 ; j<8;j++)
+    {
+      switchLayer(j);
+    for( int i =0; i<8;i++)
+    {
+      
+    }
+    }
     
-   
-    if((in&(1<<i))>0)Tlc.set(i, 4095); 
-    
-  }
+  
+  
+//  Tlc.clear();
+//  for(int i = 0; i<=64;i++)
+//  {
+//    
+//   
+//    if((in&(1<<i))>0)Tlc.set(i, 4095); 
+//    
+//  }
   Tlc.update();
     //delay(1);
 }

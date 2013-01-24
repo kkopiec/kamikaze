@@ -11,9 +11,10 @@
 #include "commands.h"
 #include "compressor.h"
 #include "Connection.h"
-
+#include "serial/serialtalk.h"
 struct image *img;
-
+int arduino;
+int devider =0;
 void 
 calculate_fbs(int samplerate, int buffer_length)
 {
@@ -45,24 +46,26 @@ void cb_mic(struct audio_stream *as)
 
   // make animation here
   unsigned char* idata;
+  devider++;
+  if (devider % 2 == 0){
+    devider = 0;
   switch(cmdnr){
   case 0: //do not display
     
     break;
   case 1: //anim1 + display
     fallingEdge(img, mag, 8);
-    //    testimgdisplay(img); //<- or send to arduino (by kev)
+    testimgdisplay(img); //<- or send to arduino (by kev)
     idata = compressData(img);
-    sendToArduino(idata);
+    sendData(idata, 8, arduino);
     free(idata);
     break;
   case 2: //anim2 + display
     plainDb(img, mag, 8);
     idata = compressData(img);
-    sendToArduino(idata);
+    sendData(idata, 8, arduino);
     free(idata);
-    //    testimgdisplay(img); //<- or send to arduino (by kev)
-
+    testimgdisplay(img); //<- or send to arduino (by kev)
     break;
   }
   
@@ -70,37 +73,33 @@ void cb_mic(struct audio_stream *as)
   // send img somewhere here
 
   printf("\n");
- /*
-  int j = sizeof(double) * as->buffer_length ;
-  int j0 ;
-  for (j0 = 0; j0 < j ; j0++){
-    printf("%f", freq[j0]);
-  }
-  printf("\n\n");
-  */
+ 
   free(freq);
+  }
   
 }
 int
 main (int argc, char *argv[])
 {
-  cmdnr = 1;
+  cmdnr = 2; //remove once cgi is ready (or set it to 0 better)
   img = malloc( sizeof(struct image));
   img->width = 8;
   img->height = 8;
   img->frames = 8;
   int datasize = img->width * img->height * img->frames;
   img->imgdata = calloc(datasize, sizeof(char));
-  initiateSerialLine();
+  arduino = openSerial("/dev/ttyACM0");
   fftw_setup(1024);
   mic_setup (&cb_mic);
   //mic_grab;
   //calculate_fbs(48000, 1024);
+  
   while (1){
     sleep (1);
-    readCommand("Kamikaze_Server", "Kamikaze_Client");
+    //readCommand("Kamikaze_Server", "Kamikaze_Client");
   }
-  closeSerialLine();
+
+  closeSerial(arduino);
   free(img);
   return 0;
 }
